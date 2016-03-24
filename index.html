@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>UESTC Wifi profile generator</title>
+  <style media="screen">
+    #app{
+      width: 200px;
+      margin: auto;
+      padding-top: 3em;
+      text-align: center;
+      font-family: sans-serif;
+    }
+    body{
+      background-color: #009FFF;
+    }
+    input{
+      border: none;
+      width: 100%;
+      margin-bottom: .5rem;
+      padding: .4rem;
+      opacity: .5;
+      transition: opacity .5s;
+    }
+    input:hover{
+      opacity: 1;
+    }
+    a{
+      display: block;
+      color: white;
+      transition: transform .5s;
+      text-decoration: none;
+    }
+    a:hover{
+      color: white;
+      transform: scale(1.2);
+    }
+    h1{
+      color: white;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/vue/latest/vue.js"></script>
+</head>
+<body>
+  <div id="app">
+    <h1>UESTC</h1>
+    <input type="text" name="name" v-model="username">
+    <input type="text" name="name" v-model="password">
+    <a href="#" v-on:click.prevent="download">Download</a>
+  </div>
+  <script type="xml/template">
+  <?xml version="1.0" encoding="UTF-8"?>
+  <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+  <plist version="1.0">
+  <dict>
+    <key>PayloadContent</key>
+    <array>
+      <dict>
+        <key>AutoJoin</key>
+        <true/>
+        <key>EAPClientConfiguration</key>
+        <dict>
+          <key>AcceptEAPTypes</key>
+          <array>
+            <integer>25</integer>
+          </array>
+          <key>EAPFASTProvisionPAC</key>
+          <false/>
+          <key>EAPFASTProvisionPACAnonymously</key>
+          <false/>
+          <key>EAPFASTUsePAC</key>
+          <false/>
+          <key>UserName</key>
+          <string>{username}</string>
+          <key>UserPassword</key>
+          <string>{password}</string>
+        </dict>
+        <key>EncryptionType</key>
+        <string>WEP</string>
+        <key>HIDDEN_NETWORK</key>
+        <false/>
+        <key>PayloadDescription</key>
+        <string>Configures wireless connectivity settings.</string>
+        <key>PayloadDisplayName</key>
+        <string>uestc</string>
+        <key>PayloadIdentifier</key>
+        <string>com.company.uestc.wifi1</string>
+        <key>PayloadOrganization</key>
+        <string></string>
+        <key>PayloadType</key>
+        <string>com.apple.wifi.managed</string>
+        <key>PayloadUUID</key>
+        <string>C9DEDB2D-A061-4E9B-BC8F-B54CF678911E</string>
+        <key>PayloadVersion</key>
+        <integer>1</integer>
+        <key>ProxyType</key>
+        <string>None</string>
+        <key>SSID_STR</key>
+        <string>uestc</string>
+      </dict>
+    </array>
+    <key>PayloadDescription</key>
+    <string>Profile description.</string>
+    <key>PayloadDisplayName</key>
+    <string>uestc</string>
+    <key>PayloadIdentifier</key>
+    <string>com.company.uestc</string>
+    <key>PayloadOrganization</key>
+    <string></string>
+    <key>PayloadRemovalDisallowed</key>
+    <false/>
+    <key>PayloadType</key>
+    <string>Configuration</string>
+    <key>PayloadUUID</key>
+    <string>D4DF97B4-4545-4090-80C4-E6D95D8C60B6</string>
+    <key>PayloadVersion</key>
+    <integer>1</integer>
+  </dict>
+  </plist>
+  </script>
+  <script>
+  function gen(username, password){
+    var tpl = document.querySelector("script[type='xml/template']").innerHTML
+    return tpl.replace("{username}", username.trim()).replace("{password}", password.trim())
+  }
+  console.log()
+    new Vue({
+      el: '#app',
+      data: {
+        username: "",
+        password: ""
+      },
+      methods: {
+        download:function(){
+          var new_file = gen(this.username, this.password)
+          console.log("!!!!")
+          var a = window.document.createElement("a");
+          a.href = URL.createObjectURL(new Blob([new_file], {type: "text"}))
+          a.download = "uestc.mobileconfig"
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
+        }
+      }
+    })
+  </script>
+</body>
+</html>
